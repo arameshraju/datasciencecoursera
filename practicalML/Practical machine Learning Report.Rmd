@@ -1,0 +1,41 @@
+---
+title: "Prediction Assignment Writeup"
+author: "Ramesh Raju Alluri"
+date: "November 5, 2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(caret)
+library(dplyr)
+library(ggplot2)
+
+# Load Raw Data
+train <- read.csv("pmltraining.csv", header = TRUE, na.strings = c("", "NA"))
+test <- read.csv("pmltesting.csv", header = TRUE, na.strings = c("", "NA"))
+
+# Data Cleaning
+train.keep <- c((colSums(!is.na(train[,-ncol(train)])) >= 0.6*nrow(train)))
+test.keep <- c((colSums(!is.na(test[,-ncol(test)])) >= 0.6*nrow(test)))
+
+train.clean <- train[, train.keep]
+test.clean <- test[, test.keep]
+
+train.clean <- train.clean[, -(1:2)]
+test.clean <- test.clean[, -(1:2)]
+
+# Model Training
+inTrain <- createDataPartition(train.clean$classe, p = 0.6, list = FALSE)
+train.set <- train.clean[inTrain, ]
+validation.set <- train.clean[-inTrain, ]
+
+# Model Prediction with Random Forest
+model_rf <- train(classe ~ ., method = "rf", data = train.set)
+pred_rf <- predict(model_rf, validation.set)
+confusion_matrix <- confusionMatrix(pred_rf, validation.set$classe)
+print(confusion_matrix)
+
+# Final Prediction
+final_predictions <- predict(model_rf, test.clean)
+print(final_predictions)
