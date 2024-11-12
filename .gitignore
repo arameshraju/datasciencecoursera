@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+.httr-oauth
+Data Science Capstone/data/**/*.txt

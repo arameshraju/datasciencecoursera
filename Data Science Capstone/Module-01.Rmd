@@ -1,0 +1,114 @@
+---
+title: "Data Science Capstone - Module 1"
+date: "November 12, 2024"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## en_US.blogs.txt   file is how many megabytes
+
+```{r q1}
+# Get the file size in bytes
+file_size_bytes <- file.info("data/en_US/en_US.blogs.txt")$size
+
+# Convert bytes to megabytes (MB)
+file_size_mb <- file_size_bytes / (1024 * 1024)
+
+# Print the file size in MB
+print(paste("File size:", round(file_size_mb, 2), "MB"))
+
+```
+
+## en_US.twitter.txt has how many lines of text?
+
+
+```{r q2}
+# Read the file into a character vector, each element representing a line
+twitter_lines <- readLines("data/en_US/en_US.twitter.txt")
+
+# Count the number of elements in the vector
+num_lines <- length(twitter_lines)
+
+print(paste("Number of lines in en_US.twitter.txt:", num_lines))
+```
+
+
+
+## What is the length of the longest line seen in any of the three en_US data sets?
+
+
+```{r q3}
+library(tidyverse)
+
+# Function to get the longest line in a file
+get_longest_line <- function(file_path) {
+  read_lines(file_path) %>% 
+    str_length() %>% 
+    max()
+}
+
+# Get the longest line length for each file
+blogs_length <- get_longest_line("data/en_US/en_US.blogs.txt")
+news_length <- get_longest_line("data/en_US/en_US.news.txt")
+twitter_length <- get_longest_line("data/en_US/en_US.twitter.txt")
+
+# Find the maximum length and corresponding file
+max_length <- max(blogs_length, news_length, twitter_length)
+max_file <- ifelse(max_length == blogs_length, "en_US.blogs.txt",
+                   ifelse(max_length == news_length, "en_US.news.txt", "en_US.twitter.txt"))
+
+print(paste("The longest line is", max_length, "characters long and is found in", max_file))
+```
+
+## In the en_US twitter data set, if you divide the number of lines where the word "love" (all lowercase) occurs by the number of lines the word "hate" (all lowercase) occurs, about what do you get?
+
+
+```{r q4}
+library(tidyverse)
+
+# Read the twitter data
+twitter_data <- read_lines("data/en_US/en_US.twitter.txt")
+
+# Count the occurrences of "love" and "hate"
+love_count <- sum(str_detect(twitter_data, "\\blove\\b"))
+hate_count <- sum(str_detect(twitter_data, "\\bhate\\b"))
+
+# Calculate the ratio
+love_hate_ratio <- love_count / hate_count
+
+print(paste("The ratio of 'love' to 'hate' in the Twitter data is approximately:", round(love_hate_ratio, 2)))
+```
+
+
+
+## The one tweet in the en_US twitter data set that matches the word "biostats" says what?
+
+
+```{r q5}
+library(tidyverse)
+
+# Read the twitter data
+twitter_data <- read_lines("data/en_US/en_US.twitter.txt")
+
+# Find the tweet containing "biostats"
+biostats_tweet <- twitter_data[str_detect(twitter_data, "\\bbiostats\\b")]
+
+print(biostats_tweet)
+```
+# 
+
+```{r q6}
+library(tidyverse)
+
+# Read the twitter data
+twitter_data <- read_lines("data/en_US/en_US.twitter.txt")
+
+# Count the exact matches
+exact_match_count <- sum(twitter_data == "A computer once beat me at chess, but it was no match for me at kickboxing")
+
+print(paste("Number of exact matches:", exact_match_count))
+```
+
