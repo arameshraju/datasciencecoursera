@@ -2,3 +2,5 @@ pip
 yfinance
 pandas
 pyswisseph 
+seaborn
+matplotlib
