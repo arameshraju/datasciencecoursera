@@ -5,3 +5,5 @@ pyswisseph
 seaborn
 matplotlib
 timedelta
+statsmodels
+scikit-learn
